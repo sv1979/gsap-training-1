@@ -1,0 +1,17 @@
+---
+description: Playwright test agent for vite-project before commits
+globs:
+  - vite-project/**
+alwaysApply: false
+---
+
+# vite-project Playwright commit agent
+
+When you change `vite-project/src/**` or the user asks to commit:
+
+1. Add or update matching specs in `vite-project/e2e/*.spec.js` (behavioral checks: visible text, roles, nav links).
+2. Run `npm run test:e2e` from `vite-project` and paste summarized results (pass count or failure lines).
+3. If tests fail, fix app or tests — do not commit until green.
+4. Only then run `git commit`.
+
+Playwright uses `playwright.config.js` with `npm run preview` on port 4173. Commits touching `vite-project/` are blocked by `.cursor/hooks` and the git pre-commit hook until e2e passes.
