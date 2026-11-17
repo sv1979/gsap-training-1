@@ -22,3 +22,38 @@ test.describe('App shell', () => {
     ).toHaveAttribute('href', '#cocktails');
   });
 });
+
+test.describe('Hero video', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+  });
+
+  test('renders scroll-pinned background video with expected attributes', async ({
+    page,
+  }) => {
+    const wrapper = page.locator('.video');
+    const video = wrapper.locator('video');
+
+    await expect(wrapper).toBeVisible();
+    await expect(video).toHaveAttribute('src', /\/videos\/output\.mp4$/);
+    await expect(video).toHaveAttribute('preload', 'auto');
+    await expect(video).toHaveJSProperty('muted', true);
+    await expect(video).toHaveJSProperty('playsInline', true);
+  });
+
+  test('loads video metadata for scroll scrubbing', async ({ page }) => {
+    const video = page.locator('.video video');
+    await expect(video).toBeVisible();
+
+    await expect
+      .poll(
+        async () =>
+          video.evaluate((el) => el.readyState >= HTMLMediaElement.HAVE_METADATA),
+        { timeout: 15_000 },
+      )
+      .toBe(true);
+
+    const duration = await video.evaluate((el) => el.duration);
+    expect(duration).toBeGreaterThan(0);
+  });
+});
