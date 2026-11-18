@@ -57,3 +57,26 @@ test.describe('Hero video', () => {
     expect(duration).toBeGreaterThan(0);
   });
 });
+
+test.describe('Cocktails section', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/#cocktails');
+  });
+
+  test('lists cocktails and mocktails from constants', async ({ page }) => {
+    const section = page.locator('#cocktails');
+    await expect(section).toBeVisible();
+    await expect(
+      section.getByRole('heading', { name: 'Most popular cocktails:' }),
+    ).toBeVisible();
+    await expect(
+      section.getByRole('heading', { name: 'Most popular mocktails:' }),
+    ).toBeVisible();
+    await expect(
+      section.getByRole('heading', { name: 'Chapel Hill Shiraz' }),
+    ).toBeVisible();
+    await expect(
+      section.getByRole('heading', { name: 'Tropical Bloom' }),
+    ).toBeVisible();
+  });
+});
